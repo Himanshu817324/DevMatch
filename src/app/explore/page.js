@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function ExplorePage() {
   const { data: session, status } = useSession();
@@ -431,10 +432,12 @@ export default function ExplorePage() {
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
                           {project.owner.image ? (
-                            <img
-                              className="h-8 w-8 rounded-full"
+                            <Image
+                              className="h-8 w-8 rounded-full object-cover"
                               src={project.owner.image}
                               alt={project.owner.name}
+                              width={32}
+                              height={32}
                             />
                           ) : (
                             <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">

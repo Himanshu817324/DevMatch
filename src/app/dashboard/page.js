@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -420,7 +421,13 @@ export default function Dashboard() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   {profile.image ? (
-                    <img className="h-16 w-16 rounded-full" src={profile.image} alt={profile.name} />
+                    <Image
+                      className="h-16 w-16 rounded-full object-cover"
+                      src={profile.image}
+                      alt={profile.name}
+                      width={64}
+                      height={64}
+                    />
                   ) : (
                     <div className="h-16 w-16 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                       <span className="text-2xl font-medium text-indigo-800 dark:text-indigo-200">

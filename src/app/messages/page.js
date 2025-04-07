@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
@@ -31,114 +31,14 @@ export default function MessagesPage() {
     }
   }, [status, router]);
 
-  // Fetch contacts and messages
-  useEffect(() => {
-    const fetchData = async () => {
-      if (status === 'authenticated' && session?.user?.id) {
-        try {
-          // In a real app, fetch from API
-          // For demo, use mock data
-          const mockContacts = [
-            {
-              id: '1',
-              name: 'Ananya Sharma',
-              avatar: null,
-              lastMessage: 'Hey, can we discuss the project design?',
-              lastMessageTime: '2023-04-07T15:30:00Z',
-              unreadCount: 2,
-              online: true
-            },
-            {
-              id: '2',
-              name: 'Aditya Kumar',
-              avatar: null,
-              lastMessage: 'I finished the component you asked for',
-              lastMessageTime: '2023-04-06T09:15:00Z',
-              unreadCount: 0,
-              online: false
-            },
-            {
-              id: '3',
-              name: 'Shivam Patel',
-              avatar: null,
-              lastMessage: 'Are you free for a call tomorrow?',
-              lastMessageTime: '2023-04-05T18:45:00Z',
-              unreadCount: 0,
-              online: true
-            },
-            {
-              id: '4',
-              name: 'Shreya Desai',
-              avatar: null,
-              lastMessage: 'The backend API is ready for integration',
-              lastMessageTime: '2023-04-04T14:20:00Z',
-              unreadCount: 0,
-              online: false
-            },
-            {
-              id: '5',
-              name: 'Himanshu Mishra',
-              avatar: null,
-              lastMessage: 'Thanks for your help!',
-              lastMessageTime: '2023-04-03T11:10:00Z',
-              unreadCount: 0,
-              online: true
-            }
-          ];
+  // Memoize helper functions with useCallback to prevent unnecessary re-renders
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
-          setContacts(mockContacts);
-
-          // If a user ID was provided in the URL, select that contact
-          if (selectedUserId) {
-            const contact = mockContacts.find(c => c.id === selectedUserId);
-            if (contact) {
-              setSelectedContact(contact);
-              fetchMessages(contact.id);
-
-              // If selecting a contact with unread messages, mark them as read
-              if (contact.unreadCount > 0) {
-                setContacts(prev =>
-                  prev.map(c => c.id === contact.id ? { ...c, unreadCount: 0 } : c)
-                );
-              }
-            }
-          }
-
-          // Immediately mark messages as read in the context when visiting page
-          markMessagesRead();
-
-          setIsLoading(false);
-        } catch (err) {
-          setError(err.message);
-          setIsLoading(false);
-        }
-      }
-    };
-
-    if (status === 'authenticated') {
-      fetchData();
-    }
-  }, [status, session, selectedUserId, markMessagesRead]);
-
-  const fetchMessages = async (contactId) => {
-    try {
-      // In a real app, fetch from API with the contactId
-      // For demo, use mock data based on the contact
-      const mockMessages = generateMockMessages(contactId);
-      setMessages(mockMessages);
-
-      // Scroll to bottom on new messages loaded
-      setTimeout(() => {
-        scrollToBottom();
-      }, 100);
-    } catch (err) {
-      console.error('Error fetching messages:', err);
-    }
-  };
-
-  const generateMockMessages = (contactId) => {
+  const generateMockMessages = useCallback((contactId) => {
     const contact = contacts.find(c => c.id === contactId);
-    if (!contact) return [];
+    if (!contact || !session?.user?.id) return [];
 
     const mockMessages = [];
 
@@ -192,7 +92,67 @@ export default function MessagesPage() {
     }
 
     return mockMessages;
-  };
+  }, [contacts, session]);
+
+  // Fetch messages function that uses the memoized helper functions
+  const fetchMessages = useCallback(async (contactId) => {
+    try {
+      // In a real app, fetch from API with the contactId
+      // For demo, use mock data based on the contact
+      const mockMessages = generateMockMessages(contactId);
+      setMessages(mockMessages);
+
+      // Scroll to bottom on new messages loaded
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+    }
+  }, [generateMockMessages, scrollToBottom]);
+
+  // Modified useEffect to include fetchMessages in the dependency array
+  useEffect(() => {
+    const fetchData = async () => {
+      if (status === 'authenticated' && session?.user?.id) {
+        setIsLoading(true);
+        try {
+          // Fetch contacts (in a real app, this would be from an API)
+          const mockContacts = [
+            { id: '1', name: 'Ananya Sharma', image: '/images/avatars/ananya.jpg', lastMessage: 'Great! I\'ll sketch some wireframes tonight and share them tomorrow.', lastMessageTime: '2023-04-07T15:38:00Z', unreadCount: 2 },
+            { id: '2', name: 'Aditya Kumar', image: '/images/avatars/aditya.jpg', lastMessage: 'Already done. The PR is waiting for your review.', lastMessageTime: '2023-04-06T09:25:00Z', unreadCount: 0 },
+            { id: '3', name: 'Shivam Patel', image: '/images/avatars/shivam.jpg', lastMessage: 'Perfect. I\'ll send a calendar invite.', lastMessageTime: '2023-04-05T18:57:00Z', unreadCount: 1 },
+            { id: '4', name: 'Shreya Desai', image: '/images/avatars/shreya.jpg', lastMessage: 'Let me know if you run into any issues.', lastMessageTime: '2023-04-04T14:32:00Z', unreadCount: 0 },
+            { id: '5', name: 'Himanshu Verma', image: '/images/avatars/himanshu.jpg', lastMessage: 'Will do. Have a great day!', lastMessageTime: '2023-04-03T11:22:00Z', unreadCount: 0 }
+          ];
+
+          setContacts(mockContacts);
+
+          // Set selected contact from URL or default to first contact
+          if (searchParams.has('user')) {
+            const userId = searchParams.get('user');
+            const contact = mockContacts.find(c => c.id === userId);
+            if (contact) {
+              setSelectedContact(contact);
+              await fetchMessages(contact.id);
+            }
+          } else if (mockContacts.length > 0) {
+            setSelectedContact(mockContacts[0]);
+            await fetchMessages(mockContacts[0].id);
+          }
+
+          setIsLoading(false);
+        } catch (err) {
+          setError(err.message);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    if (status === 'authenticated') {
+      fetchData();
+    }
+  }, [status, session, searchParams, fetchMessages, markMessagesRead]);
 
   const handleContactSelect = (contact) => {
     setSelectedContact(contact);
@@ -268,10 +228,6 @@ export default function MessagesPage() {
 
     // In a real app, you would send the message to the API
     // and handle real-time updates with WebSockets
-  };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const formatTime = (timestamp) => {
@@ -351,10 +307,10 @@ export default function MessagesPage() {
                   >
                     <div className="flex items-center space-x-3">
                       <div className="relative flex-shrink-0">
-                        {contact.avatar ? (
+                        {contact.image ? (
                           <Image
                             className="h-10 w-10 rounded-full"
-                            src={contact.avatar}
+                            src={contact.image}
                             alt={contact.name}
                             width={40}
                             height={40}
@@ -365,9 +321,6 @@ export default function MessagesPage() {
                               {contact.name.split(' ').map(n => n[0]).join('')}
                             </span>
                           </div>
-                        )}
-                        {contact.online && (
-                          <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-white" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -402,10 +355,10 @@ export default function MessagesPage() {
                 {/* Selected Contact Header */}
                 <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center">
                   <div className="relative mr-3">
-                    {selectedContact.avatar ? (
+                    {selectedContact.image ? (
                       <Image
                         className="h-8 w-8 rounded-full"
-                        src={selectedContact.avatar}
+                        src={selectedContact.image}
                         alt={selectedContact.name}
                         width={32}
                         height={32}
@@ -417,17 +370,11 @@ export default function MessagesPage() {
                         </span>
                       </div>
                     )}
-                    {selectedContact.online && (
-                      <span className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-green-400 ring-1 ring-white" />
-                    )}
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                       {selectedContact.name}
                     </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {selectedContact.online ? 'Online' : 'Offline'}
-                    </p>
                   </div>
                 </div>
 
