@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -15,10 +15,12 @@ export default function SignUp() {
   const router = useRouter();
   const { status } = useSession();
 
-  // Redirect if already logged in
-  if (status === 'authenticated') {
-    router.push('/dashboard');
-  }
+  // Use useEffect for redirection instead of doing it during render
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/dashboard');
+    }
+  }, [status, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

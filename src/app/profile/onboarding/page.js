@@ -132,52 +132,52 @@ export default function OnboardingPage() {
 
   if (status === 'loading') {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
           Complete your profile
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-gray-300">
           Let&apos;s set up your profile so you can start collaborating
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="mb-6">
             <div className="flex justify-between items-center">
-              <span className="text-xs font-medium text-gray-500">
+              <span className="text-xs font-medium text-gray-300">
                 Step {currentStep} of 2
               </span>
-              <span className="text-xs font-medium text-gray-500">
+              <span className="text-xs font-medium text-gray-300">
                 {currentStep === 1 ? 'Skills' : 'Profile Information'}
               </span>
             </div>
-            <div className="mt-2 h-2 bg-gray-200 rounded-full">
+            <div className="mt-2 h-2 bg-gray-700 rounded-full">
               <div
-                className="h-full bg-indigo-600 rounded-full transition-all duration-300"
+                className="h-full bg-indigo-500 rounded-full transition-all duration-300"
                 style={{ width: `${(currentStep / 2) * 100}%` }}
               ></div>
             </div>
           </div>
 
           {error && (
-            <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="mb-4 bg-red-900 border-l-4 border-red-500 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-5 w-5 text-red-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm text-red-700">{error}</p>
+                  <p className="text-sm text-red-300">{error}</p>
                 </div>
               </div>
             </div>
@@ -186,10 +186,10 @@ export default function OnboardingPage() {
           <form>
             {currentStep === 1 && (
               <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+                <h3 className="text-lg font-medium leading-6 text-white mb-4">
                   What are your skills?
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-gray-300 mb-4">
                   Select the technologies and skills you&apos;re proficient in. This helps us match you with relevant projects.
                 </p>
 
@@ -200,8 +200,8 @@ export default function OnboardingPage() {
                       type="button"
                       onClick={() => toggleSkill(skill)}
                       className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${selectedSkills.includes(skill)
-                        ? 'bg-indigo-100 text-indigo-800 border-2 border-indigo-500'
-                        : 'bg-gray-100 text-gray-800 border-2 border-transparent hover:bg-gray-200'
+                        ? 'bg-indigo-500 text-white border-2 border-white'
+                        : 'bg-gray-700 text-white border-2 border-gray-500 hover:border-white hover:bg-gray-600'
                         }`}
                     >
                       {skill}
@@ -210,19 +210,19 @@ export default function OnboardingPage() {
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-sm font-medium text-gray-700 mb-2">Selected skills ({selectedSkills.length}):</p>
+                  <p className="text-sm font-medium text-white mb-2">Selected skills ({selectedSkills.length}):</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedSkills.length > 0 ? (
                       selectedSkills.map((skill) => (
                         <span
                           key={skill}
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-500 text-white"
                         >
                           {skill}
                           <button
                             type="button"
                             onClick={() => toggleSkill(skill)}
-                            className="ml-1.5 inline-flex flex-shrink-0 h-4 w-4 rounded-full text-indigo-400 hover:text-indigo-600 focus:outline-none focus:text-indigo-500"
+                            className="ml-1.5 inline-flex flex-shrink-0 h-4 w-4 rounded-full text-white hover:text-red-200 focus:outline-none focus:text-red-300"
                           >
                             <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -231,7 +231,7 @@ export default function OnboardingPage() {
                         </span>
                       ))
                     ) : (
-                      <span className="text-sm text-gray-500">No skills selected</span>
+                      <span className="text-sm text-gray-300">No skills selected</span>
                     )}
                   </div>
                 </div>
@@ -250,143 +250,139 @@ export default function OnboardingPage() {
 
             {currentStep === 2 && (
               <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+                <h3 className="text-lg font-medium leading-6 text-white mb-4">
                   About you
                 </h3>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-gray-300 mb-4">
                   Tell us a bit about yourself to help others get to know you.
                 </p>
 
                 <div className="space-y-4">
                   <div>
-                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-300">
                       Professional title
                     </label>
                     <div className="mt-1">
                       <input
                         type="text"
                         id="title"
+                        name="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="e.g. Full Stack Developer"
-                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-600 bg-gray-700 text-white rounded-md"
+                        placeholder="e.g. Frontend Developer"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="bio" className="block text-sm font-medium text-gray-300">
                       Bio
                     </label>
                     <div className="mt-1">
                       <textarea
                         id="bio"
-                        rows={3}
+                        name="bio"
+                        rows={4}
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
-                        placeholder="Tell us about yourself, your experience, and what you're looking for"
-                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                        required
+                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-600 bg-gray-700 text-white rounded-md"
+                        placeholder="Tell others about yourself, your experience, and what you're looking for"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-gray-700">Social profiles (optional)</h4>
+                    <h4 className="text-sm font-medium text-gray-300">Social profiles (optional)</h4>
 
                     <div>
-                      <label htmlFor="github" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="github" className="block text-sm font-medium text-gray-300">
                         GitHub username
                       </label>
-                      <div className="mt-1">
-                        <div className="flex rounded-md shadow-sm">
-                          <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                            github.com/
-                          </span>
-                          <input
-                            type="text"
-                            id="github"
-                            value={github}
-                            onChange={(e) => setGithub(e.target.value)}
-                            placeholder="username"
-                            className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                          />
-                        </div>
+                      <div className="mt-1 flex rounded-md shadow-sm">
+                        <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-600 bg-gray-700 text-gray-300 sm:text-sm">
+                          github.com/
+                        </span>
+                        <input
+                          type="text"
+                          id="github"
+                          name="github"
+                          value={github}
+                          onChange={(e) => setGithub(e.target.value)}
+                          className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-600 bg-gray-700 text-white"
+                        />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="linkedin" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="linkedin" className="block text-sm font-medium text-gray-300">
                         LinkedIn username
                       </label>
-                      <div className="mt-1">
-                        <div className="flex rounded-md shadow-sm">
-                          <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                            linkedin.com/in/
-                          </span>
-                          <input
-                            type="text"
-                            id="linkedin"
-                            value={linkedin}
-                            onChange={(e) => setLinkedin(e.target.value)}
-                            placeholder="username"
-                            className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                          />
-                        </div>
+                      <div className="mt-1 flex rounded-md shadow-sm">
+                        <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-600 bg-gray-700 text-gray-300 sm:text-sm">
+                          linkedin.com/in/
+                        </span>
+                        <input
+                          type="text"
+                          id="linkedin"
+                          name="linkedin"
+                          value={linkedin}
+                          onChange={(e) => setLinkedin(e.target.value)}
+                          className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-600 bg-gray-700 text-white"
+                        />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="portfolio" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="portfolio" className="block text-sm font-medium text-gray-300">
                         Portfolio website
                       </label>
                       <div className="mt-1">
                         <input
                           type="url"
                           id="portfolio"
+                          name="portfolio"
                           value={portfolio}
                           onChange={(e) => setPortfolio(e.target.value)}
-                          placeholder="https://example.com"
-                          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-600 bg-gray-700 text-white rounded-md"
+                          placeholder="https://yourportfolio.com"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="twitter" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="twitter" className="block text-sm font-medium text-gray-300">
                         Twitter username
                       </label>
-                      <div className="mt-1">
-                        <div className="flex rounded-md shadow-sm">
-                          <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                            twitter.com/
-                          </span>
-                          <input
-                            type="text"
-                            id="twitter"
-                            value={twitter}
-                            onChange={(e) => setTwitter(e.target.value)}
-                            placeholder="username"
-                            className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                          />
-                        </div>
+                      <div className="mt-1 flex rounded-md shadow-sm">
+                        <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-600 bg-gray-700 text-gray-300 sm:text-sm">
+                          twitter.com/
+                        </span>
+                        <input
+                          type="text"
+                          id="twitter"
+                          name="twitter"
+                          value={twitter}
+                          onChange={(e) => setTwitter(e.target.value)}
+                          className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-600 bg-gray-700 text-white"
+                        />
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex justify-between">
+                  <div className="mt-6 flex justify-between">
                     <button
                       type="button"
                       onClick={handlePrevStep}
-                      className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="inline-flex items-center px-4 py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       Back
                     </button>
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      disabled={isSubmitting || !bio.trim()}
-                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70"
+                      disabled={isSubmitting}
+                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                     >
                       {isSubmitting ? 'Saving...' : 'Complete Profile'}
                     </button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -13,10 +13,12 @@ export default function SignIn() {
   const router = useRouter();
   const { status } = useSession();
 
-  // Redirect if already logged in
-  if (status === 'authenticated') {
-    router.push('/dashboard');
-  }
+  // Use useEffect for redirection instead of doing it during render
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/dashboard');
+    }
+  }, [status, router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -175,7 +177,16 @@ export default function SignIn() {
 
               <div>
                 <button
-                  onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+                  onClick={() => {
+                    console.log('Attempting Google sign-in');
+                    signIn('google', {
+                      callbackUrl: '/dashboard',
+                      redirect: true
+                    }).catch(error => {
+                      console.error('Google sign-in error:', error);
+                      setError('Error with Google authentication: ' + (error?.message || 'Unknown error'));
+                    });
+                  }}
                   className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
                 >
                   <span className="sr-only">Sign in with Google</span>

@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "../../components/providers/AuthProvider";
-import Navbar from "../../components/navigation/Navbar";
+import ClientLayout from "./client-layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Metadata configuration
 export const metadata = {
   title: "DevMatch",
   description: "A platform for developers to find collaborators for projects",
@@ -20,16 +20,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="light">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
-        <AuthProvider>
-          <Navbar />
-          <main className="min-h-screen">
-            {children}
-          </main>
-        </AuthProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
